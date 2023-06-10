@@ -1,0 +1,14 @@
+# Venv
+/venv
+
+# Config
+.env
+
+# Alembic
+alembic.ini
+
+# Site Packages / Misc things
+google-cloud-sdk
+google-cloud-cli-432.0.0-darwin-arm.tar.gz
+
+
