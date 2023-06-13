@@ -1,8 +1,10 @@
 # Venv
 /venv
+/potent-quotables
 
 # Config
 .env
+*.json
 
 # Alembic
 alembic.ini

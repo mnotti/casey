@@ -10,4 +10,6 @@ Ok good README.md
 If you're reading this.
 I love you. <3. 
 
- 
+## Tests
+
+`python -m unittest discover tests` 
