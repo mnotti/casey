@@ -36,7 +36,7 @@ def write_news_csv(ticker, date_str, news_data):
 	csv_path = os.path.join(news_folder_path, csv_filename)
 	file_exists = os.path.isfile(csv_path)
 	file_is_empty = not file_exists or os.stat(csv_path).st_size == 0
-	fieldnames = ["uuid", "title", "url", "published_at", "published_on", "source", "entity_ticker", "entity_match_score", "entity_sentiment_score"]
+	fieldnames = ["uuid", "title", "url", "published_at", "date", "source", "entity_ticker", "entity_match_score", "entity_sentiment_score"]
 
 	with open(csv_path, "a", newline="") as csvfile:
 		writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
