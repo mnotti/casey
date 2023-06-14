@@ -5,6 +5,9 @@
 .env
 *.json
 
+# Data
+/data
+
 # Alembic
 alembic.ini
 
