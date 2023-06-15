@@ -8,7 +8,6 @@ with open('config.json') as f:
     config = json.load(f)
 price_folder_path = config['price_path']
 
-
 # Define the stock symbol and the date range
 symbol = "TSLA"
 end_date = datetime.now().date()

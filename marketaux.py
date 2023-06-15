@@ -8,7 +8,7 @@ import csv
 with open('config.json') as f:
     config = json.load(f)
 api_key = config['market_aux_api_key']
-news_folder_path = config['news_folder_path']
+news_folder_path = config['news_path']
 
 # from_date, to_date follow marketaux api criteria e.g. YYYY-MM-DD
 def get_news(ticker, date_str):
