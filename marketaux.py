@@ -3,7 +3,7 @@ import requests
 from datetime import datetime, timedelta
 import os
 import csv
-
+import sys
 
 with open('config.json') as f:
     config = json.load(f)
@@ -24,7 +24,7 @@ def get_news(ticker, date_str):
 	response = requests.get(endpoint_url, params=params)
 	if response.status_code == 200:
 		news_data = response.json()
-		print(f"200 OK - got news data w/ {len(news_data)} articles")
+		print(f"200 OK - got news data w/ {len(news_data['data'])} articles")
 		return news_data["data"]
 	else:
 	    print("Failed to retrieve news. Status code:", response.status_code)
@@ -49,7 +49,7 @@ def write_news_csv(ticker, date_str, news_data):
 				"title": article["title"],
 				"url": article["url"],
 				"published_at": article["published_at"],
-				"published_on": date_str,
+				"date": date_str,
 				"source": article["source"],
 				"entity_ticker": entity["symbol"],
 				"entity_match_score": entity["match_score"],
@@ -89,14 +89,16 @@ def get_date_strings_in_range(from_date_str, to_date_str):
 	return date_strings
 
 def main():
-	stonk = "TSLA"
-	date_strs = get_date_strings_in_range("2023-05-14", "2023-06-14")
+	symbol = sys.argv[1] # TSLA
+	from_date = sys.argv[2] #YYYY-MM-DD
+	to_date = sys.argv[3] #YYYY-MM-DD
+	date_strs = get_date_strings_in_range(from_date, to_date)
 	for date_str in date_strs:
-		#news = get_news(stonk, date_str)
-		json_path = f"data/raw-news-TSLA-{date_str}.json"
-		#write_json(json_path, news)
+		news = get_news(symbol, date_str)
+		json_path = f"data/raw-news-{symbol}-{date_str}.json"
+		write_json(json_path, news)
 		news_from_json = read_from_json(json_path)
-		write_news_csv(stonk, date_str, news_from_json)
+		write_news_csv(symbol, date_str, news_from_json)
 
 if __name__ == "__main__":
 	main()
