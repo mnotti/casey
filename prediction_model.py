@@ -24,10 +24,11 @@ def run_prediction(window_size, train_ratio, lstm_units):
 
 	# Merge all relevant data based on the date
 	merged_data = pd.merge(price_data, sentiment_data, on='date', how='inner')
+	merged_data['next_close'] = merged_data['close'].shift(-1)
 
 	# Prepare input features and target variable
 	features = merged_data[['open', 'close', 'volume', 'high', 'low', 'weighted_sentiment']].values
-	target = merged_data['close'].shift(-1).values[:-1]  # Shifting target variable by 1 days for price direction prediction
+	target = merged_data['next_close'].values[:-1]  # Shifting target variable by 1 days for price direction prediction
 
 	# Scale the features
 	scaler = MinMaxScaler(feature_range=(0, 1))
@@ -45,17 +46,16 @@ def run_prediction(window_size, train_ratio, lstm_units):
 	# Split the data into training and test sets
 	train_size = int(train_ratio * len(scaled_features))
 	train_features = input_sequences[:train_size]
-	train_target = output_targets[:train_size]
 	test_features = input_sequences[train_size:]
 	print(f"(train,test) features: ({len(train_features)},{len(test_features)})")
+
+	train_target = output_targets[:train_size]
 	test_target = output_targets[train_size:]
 
 	model = Sequential()
 	model.add(LSTM(lstm_units, input_shape=(window_size, train_features.shape[2])))
 	model.add(Dense(1)) # number of predictions per target
 	model.compile(loss='mean_squared_error', optimizer='adam')
-
-	# Train the model
 	model.fit(train_features, train_target, epochs=10, batch_size=16, verbose=2)
 
 	# Predict on the test set
@@ -75,7 +75,7 @@ def main():
 	min_eval_result = sys.maxsize
 	min_eval_params = [None] * 3
 	window_size_min = 1
-	window_size_max = 61
+	window_size_max = 2
 	window_size_step = 2
 	train_ratio_int_min = 7
 	train_ratio_int_max = 8
